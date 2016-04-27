@@ -1,11 +1,11 @@
 // importScripts('./stl-utils.js')
-import { parseSteps } from './parseHelpers'
+import { parse } from './parse'
 
 self.onmessage = function (event) {
-  let result = parseSteps(event.data.data)
+  function cb (data) {
+    self.postMessage({data}, [data])
+    self.close()
+  }
 
-  let positions = result.positions.buffer
-  let normals = result.normals.buffer
-  self.postMessage({positions, normals}, [positions, normals])
-  self.close()
+  parse(event.data.data, cb)
 }
