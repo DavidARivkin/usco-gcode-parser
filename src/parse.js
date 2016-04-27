@@ -1,6 +1,6 @@
 import { GCodeToolpath } from 'gcode-toolpath'
 
-export function parse(data, cb)
+export function parseSteps(data, cb)
 {
   const defaultColor = [0, 0, 0, 255]
   const motionColor = {
@@ -38,19 +38,19 @@ export function parse(data, cb)
   toolpath.loadFromString(data, function (err, data) {
     if (err) {
       //obs.onError(err)
-    } else {
-      const positions = new Float32Array(posArray) // posArray.length  )
-      const colors = new Float32Array(colArray) // posArray.length/3 * 4  )
-      // positions.set( posArray )
-      // colors.set ( colArray )
-      geometry = {colors, positions}
-      group = geometry
-      geometry = {}
+      cb(err, undefined)
     }
   })
     .on('end', (results) => {
+      console.log('end')
       //obs.onNext([group])
       //obs.onNext({progress: 1, total: 1})
-      cb([group])
+      const positions = new Float32Array(posArray) // posArray.length  )
+      const colors = new Float32Array(colArray) // posArray.length/3 * 4  )
+      geometry = {colors, positions}
+      group = geometry
+      geometry = {}
+
+      cb(undefined, [group])
     })
 }

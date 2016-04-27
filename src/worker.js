@@ -1,10 +1,11 @@
-// importScripts('./stl-utils.js')
-import { parse } from './parse'
+import { parseSteps } from './parse'
 
 self.onmessage = function (event) {
-  function cb (data) {
-    self.postMessage({data}, [data])
-    self.close()
+  function cb (err, data) {
+    if (err) { throw err } else {
+      self.postMessage({data}, [data])
+      self.close()
+    }
   }
 
   parse(event.data.data, cb)

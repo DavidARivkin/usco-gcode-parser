@@ -9,6 +9,7 @@
 import Rx from 'rx'
 import assign from 'fast.js/object/assign'
 import detectEnv from 'composite-detect'
+import { parseSteps } from './parse'
 
 export default function parse (data, parameters = {}) {
   const defaults = {
@@ -40,14 +41,15 @@ export default function parse (data, parameters = {}) {
     worker.postMessage({data})
     obs.catch(e => worker.terminate())
   } else {
-    try {
-      let result = parseSteps(data)
-      obs.onNext({progress: 1, total: result.positions.length})
-      obs.onNext(result)
-      obs.onCompleted()
-    } catch (error) {
-      obs.onError(error)
-    }
+    parseSteps(data, (err, result) => {
+      if (err) {
+        obs.onError(error)
+      } else {
+        //obs.onNext({progress: 1, total: 1})
+        obs.onNext(result)
+        obs.onCompleted()
+      }
+    })
   }
 
   return obs
