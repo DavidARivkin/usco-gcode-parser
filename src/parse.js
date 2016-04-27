@@ -26,6 +26,7 @@ export function parseSteps(data, cb)
   function addArcCurve (modalState, v1, v2, v0) {
   }
 
+  console.log('starting to parse')
   const toolpath = new GCodeToolpath({
     modalState: {},
     addLine: (modalState, v1, v2) => {
@@ -36,21 +37,19 @@ export function parseSteps(data, cb)
     }
   })
   toolpath.loadFromString(data, function (err, data) {
+    //console.log('foo',err, data)
     if (err) {
-      //obs.onError(err)
       cb(err, undefined)
     }
   })
-    .on('end', (results) => {
-      console.log('end')
-      //obs.onNext([group])
-      //obs.onNext({progress: 1, total: 1})
-      const positions = new Float32Array(posArray) // posArray.length  )
-      const colors = new Float32Array(colArray) // posArray.length/3 * 4  )
-      geometry = {colors, positions}
-      group = geometry
-      geometry = {}
+  .on('end', (results) => {
+    console.log('end')
+    const positions = new Float32Array(posArray) // posArray.length  )
+    const colors = new Float32Array(colArray) // posArray.length/3 * 4  )
+    geometry = {colors, positions}
+    group = geometry
+    geometry = {}
 
-      cb(undefined, [group])
+    cb(undefined, [group])
     })
 }
